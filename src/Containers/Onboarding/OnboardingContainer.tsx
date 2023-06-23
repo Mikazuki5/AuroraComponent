@@ -9,7 +9,9 @@ import {
   Dimensions,
   View,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
+import * as Icons from 'react-native-heroicons/solid';
 
 const {width, height} = Dimensions.get('screen');
 const bgs = ['#A5BBFF', '#DDBEFE', '#FF63ED', '#B98EFF'];
@@ -45,7 +47,7 @@ const DATA = [
 
 const Indicator = ({scrollX}: any) => {
   return (
-    <View style={{position: 'absolute', bottom: 100, flexDirection: 'row'}}>
+    <View style={{position: 'absolute', bottom: 50, flexDirection: 'row'}}>
       {DATA.map((_, index) => {
         const inputRange = [
           (index - 1) * width,
@@ -121,6 +123,40 @@ const Square = ({scrollX}: any) => {
   );
 };
 
+const ButtonCircle = ({scrollX, index}: any) => {
+  const inputRange = [(index - 1) * width, index * width, (index + 1) * width];
+  const scale = scrollX.interpolate({
+    inputRange,
+    outputRange: [0.8, 1.4, 0.8],
+    extrapolate: 'clamp',
+  });
+  const opacity = scrollX.interpolate({
+    inputRange,
+    outputRange: [0.6, 0.9, 0.6],
+    extrapolate: 'clamp',
+  });
+  return (
+    <TouchableOpacity>
+      <Animated.View
+        style={{
+          transform: [{scale}],
+          opacity,
+          backgroundColor: '#fff',
+          width: 50,
+          height: 50,
+          borderRadius: 25,
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'absolute',
+          bottom: 0,
+          left: -20,
+        }}>
+        <Icons.ArrowRightIcon color={'#000'} size={16} />
+      </Animated.View>
+    </TouchableOpacity>
+  );
+};
+
 const OnboardingContainer = () => {
   const scrollX = React.useRef(new Animated.Value(0)).current;
 
@@ -148,7 +184,7 @@ const OnboardingContainer = () => {
         pagingEnabled
         contentContainerStyle={{paddingBottom: 100}}
         keyExtractor={item => item.key}
-        renderItem={({item}) => {
+        renderItem={({item, index}) => {
           return (
             <View style={{width, alignItems: 'center', padding: 20}}>
               <View style={{flex: 0.7, justifyContent: 'center'}}>
@@ -177,6 +213,7 @@ const OnboardingContainer = () => {
                   </Text>
                 </View>
               </View>
+              {index === 3 && <ButtonCircle scrollX={scrollX} index={index} />}
             </View>
           );
         }}
