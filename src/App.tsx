@@ -1,6 +1,6 @@
 import React from 'react';
-import {OnboardingScreen} from './Containers';
 import {StatusBar} from 'react-native';
+import ScreenNavigation from './Navigation/ScreenNavigation';
 
 const App = () => {
   return (
@@ -11,7 +11,7 @@ const App = () => {
         backgroundColor={'#fff'}
         barStyle={'dark-content'}
       />
-      <OnboardingScreen />
+      <ScreenNavigation />
     </>
   );
 };
