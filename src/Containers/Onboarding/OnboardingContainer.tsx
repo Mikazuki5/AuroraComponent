@@ -1,17 +1,17 @@
 /* eslint-disable react-native/no-inline-styles */
-import {ImageAssets} from '@/Assets/Constant';
+import {AnimationsAssets} from '@/Assets/Constant';
 import React from 'react';
 import {
   SafeAreaView,
   Text,
   Animated,
-  Image,
   Dimensions,
   View,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
 import * as Icons from 'react-native-heroicons/solid';
+import Lottie from 'lottie-react-native';
 
 const {width, height} = Dimensions.get('screen');
 const bgs = ['#A5BBFF', '#DDBEFE', '#FF63ED', '#B98EFF'];
@@ -21,27 +21,27 @@ const DATA = [
     title: 'Multi-lateral intermediate moratorium',
     description:
       "I'll back up the multi-byte XSS matrix, that should feed the SCSI application!",
-    image: ImageAssets.game_controller,
+    image: AnimationsAssets.smartphone_animation,
   },
   {
     key: '3571747',
     title: 'Automated radical data-warehouse',
     description:
       'Use the optical SAS system, then you can navigate the auxiliary alarm!',
-    image: ImageAssets.earrings,
+    image: AnimationsAssets.hotels_animation,
   },
   {
     key: '3571680',
     title: 'Inverse attitude-oriented system engine',
     description:
       'The ADP array is down, compress the online sensor so we can input the HTTP panel!',
-    image: ImageAssets.flamingo,
+    image: AnimationsAssets.accountant_animation,
   },
   {
     key: '3571603',
     title: 'Monitored global data-warehouse',
     description: 'We need to program the open-source IB interface!',
-    image: ImageAssets.hair_spray,
+    image: AnimationsAssets.game_animation,
   },
 ];
 
@@ -123,7 +123,7 @@ const Square = ({scrollX}: any) => {
   );
 };
 
-const ButtonCircle = ({scrollX, index}: any) => {
+const ButtonCircle = ({scrollX, index, onPress}: any) => {
   const inputRange = [(index - 1) * width, index * width, (index + 1) * width];
   const scale = scrollX.interpolate({
     inputRange,
@@ -136,7 +136,7 @@ const ButtonCircle = ({scrollX, index}: any) => {
     extrapolate: 'clamp',
   });
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={onPress}>
       <Animated.View
         style={{
           transform: [{scale}],
@@ -157,7 +157,7 @@ const ButtonCircle = ({scrollX, index}: any) => {
   );
 };
 
-const OnboardingContainer = () => {
+const OnboardingContainer = ({navigation}: any) => {
   const scrollX = React.useRef(new Animated.Value(0)).current;
 
   return (
@@ -188,12 +188,13 @@ const OnboardingContainer = () => {
           return (
             <View style={{width, alignItems: 'center', padding: 20}}>
               <View style={{flex: 0.7, justifyContent: 'center'}}>
-                <Image
+                <Lottie
                   source={item.image}
+                  autoPlay
+                  resizeMode="contain"
                   style={{
-                    width: width / 2,
-                    height: width / 2,
-                    resizeMode: 'contain',
+                    width: width / 1.5,
+                    height: width / 1.5,
                   }}
                 />
               </View>
@@ -213,7 +214,13 @@ const OnboardingContainer = () => {
                   </Text>
                 </View>
               </View>
-              {index === 3 && <ButtonCircle scrollX={scrollX} index={index} />}
+              {index === 3 && (
+                <ButtonCircle
+                  scrollX={scrollX}
+                  index={index}
+                  onPress={() => navigation.navigate('Home')}
+                />
+              )}
             </View>
           );
         }}
