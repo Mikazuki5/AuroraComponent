@@ -218,7 +218,7 @@ const OnboardingContainer = ({navigation}: any) => {
                 <ButtonCircle
                   scrollX={scrollX}
                   index={index}
-                  onPress={() => navigation.navigate('Home')}
+                  onPress={() => navigation.navigate('Login')}
                 />
               )}
             </View>

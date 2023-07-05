@@ -1,8 +1,8 @@
 import React from 'react';
-import {SafeAreaView} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
-const ContainerComponent = ({children}: {children: any}) => {
-  return <SafeAreaView style={{flex: 1}}>{children}</SafeAreaView>;
+const ContainerComponent = ({children, style}: {children: any; style: any}) => {
+  return <SafeAreaView style={{...style}}>{children}</SafeAreaView>;
 };
 
 export default ContainerComponent;
