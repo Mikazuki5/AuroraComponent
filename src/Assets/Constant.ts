@@ -6,6 +6,7 @@ export const ImageAssets = {
   flamingo: require('./Image/flamingo.png'),
   hair_spray: require('./Image/hair-spray.png'),
   google_logo: require('./Image/google_logo.png'),
+  logout: require('./Image/logout.png'),
 };
 
 export const AnimationsAssets = {

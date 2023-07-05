@@ -8,12 +8,13 @@ const TabButton = (
   setCurrentTab: any,
   title: any,
   Icon: any,
+  onPressLogout?: any,
 ) => {
   return (
     <TouchableOpacity
       onPress={() => {
         if (title === 'LogOut') {
-          // Do your Stuff...
+          onPressLogout();
         } else {
           setCurrentTab(title);
         }
@@ -44,7 +45,7 @@ const TabButton = (
   );
 };
 
-const DrawerComponent = () => {
+const DrawerComponent = ({onLogout}: {onLogout: () => void}) => {
   const [currentTab, setCurrentTab] = useState('Home');
   return (
     <View style={{justifyContent: 'flex-start', padding: 15}}>
@@ -116,6 +117,7 @@ const DrawerComponent = () => {
           setCurrentTab,
           'LogOut',
           <Icons.ArrowRightOnRectangleIcon size={20} color={'#fff'} />,
+          () => onLogout(),
         )}
       </View>
     </View>

@@ -1,13 +1,15 @@
 /* eslint-disable react-native/no-inline-styles */
 import {width} from '@/Assets/Constant';
-import {Drawer} from '@/Components';
+import {Drawer, PopupDialog} from '@/Components';
 import React, {useRef, useState} from 'react';
-import {Animated, TouchableOpacity, View} from 'react-native';
+import {Animated, StatusBar, TouchableOpacity, View} from 'react-native';
 import * as Icons from 'react-native-heroicons/solid';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+const AnimatedStatusBar = Animated.createAnimatedComponent(StatusBar);
 const HomeScreenContainer = () => {
   const [showMenu, setShowMenu] = useState(false);
+  const [isShowModalAlert, setIsShowModalAlert] = useState<boolean>(false);
   const inset = useSafeAreaInsets();
 
   const offsetValue = useRef(new Animated.Value(0)).current;
@@ -21,8 +23,40 @@ const HomeScreenContainer = () => {
     outputRange: ['#fff', '#A5BBFF'],
   });
 
+  const handleOpenDrawer = () => {
+    Animated.timing(scaleValue, {
+      toValue: showMenu ? 1 : 0.88,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(offsetValue, {
+      toValue: showMenu ? 0 : 230,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(closeButtonOffset, {
+      toValue: !showMenu ? -5 : 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(backgroundColor, {
+      toValue: !showMenu ? 1 : 0,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+
+    setShowMenu(!showMenu);
+  };
+
   return (
     <>
+      <AnimatedStatusBar
+        backgroundColor={interpolatedColor}
+        barStyle={showMenu ? 'light-content' : 'dark-content'}
+      />
       <Animated.View
         style={{
           flex: 1,
@@ -33,7 +67,7 @@ const HomeScreenContainer = () => {
           paddingBottom: inset.bottom,
         }}>
         <View style={{flex: 1}}>
-          <Drawer />
+          <Drawer onLogout={() => setIsShowModalAlert(true)} />
           <Animated.View
             style={{
               width,
@@ -59,34 +93,7 @@ const HomeScreenContainer = () => {
                     },
                   ],
                 }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    Animated.timing(scaleValue, {
-                      toValue: showMenu ? 1 : 0.88,
-                      duration: 300,
-                      useNativeDriver: true,
-                    }).start();
-
-                    Animated.timing(offsetValue, {
-                      toValue: showMenu ? 0 : 230,
-                      duration: 300,
-                      useNativeDriver: true,
-                    }).start();
-
-                    Animated.timing(closeButtonOffset, {
-                      toValue: !showMenu ? -5 : 0,
-                      duration: 300,
-                      useNativeDriver: true,
-                    }).start();
-
-                    Animated.timing(backgroundColor, {
-                      toValue: !showMenu ? 1 : 0,
-                      duration: 300,
-                      useNativeDriver: false,
-                    }).start();
-
-                    setShowMenu(!showMenu);
-                  }}>
+                <TouchableOpacity onPress={() => handleOpenDrawer()}>
                   {showMenu ? (
                     <Icons.XMarkIcon size={25} color={'#000'} />
                   ) : (
@@ -99,6 +106,16 @@ const HomeScreenContainer = () => {
               </TouchableOpacity>
             </View>
           </Animated.View>
+          <PopupDialog
+            isShowModal={isShowModalAlert}
+            title="Tetap ingin keluar dari Akunmu?"
+            description="Kamu perlu Masuk lagi untuk kembali menggunakan Layanan Aurora
+              School."
+            onClosed={() => setIsShowModalAlert(false)}
+            textOnClosed="Tetap Keluar"
+            onSuccess={() => setIsShowModalAlert(false)}
+            textOnSuccess="Kembali"
+          />
         </View>
       </Animated.View>
     </>
