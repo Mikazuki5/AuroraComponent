@@ -2,7 +2,7 @@
 import {width} from '@/Assets/Constant';
 import {Drawer, PopupDialog} from '@/Components';
 import React, {useRef, useState} from 'react';
-import {Animated, StatusBar, TouchableOpacity, View} from 'react-native';
+import {Animated, StatusBar, Text, TouchableOpacity, View} from 'react-native';
 import * as Icons from 'react-native-heroicons/solid';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
@@ -101,9 +101,22 @@ const HomeScreenContainer = () => {
                   )}
                 </TouchableOpacity>
               </Animated.View>
-              <TouchableOpacity>
-                <Icons.BellAlertIcon size={25} color={'#88a0eb'} />
-              </TouchableOpacity>
+            </View>
+            <View style={{flex: 1, paddingTop: 10}}>
+              <View>
+                <Text style={{color: '#007DAE', fontSize: 18}}>
+                  Selamat Datang,
+                </Text>
+                <Text
+                  style={{
+                    color: '#070808',
+                    fontSize: 32,
+                    fontWeight: 'bold',
+                    lineHeight: 40,
+                  }}>
+                  Gamal Rivaldi M
+                </Text>
+              </View>
             </View>
           </Animated.View>
           <PopupDialog
