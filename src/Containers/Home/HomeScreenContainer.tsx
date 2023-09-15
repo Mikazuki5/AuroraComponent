@@ -1,15 +1,30 @@
 /* eslint-disable react-native/no-inline-styles */
 import {width} from '@/Assets/Constant';
 import {Drawer, PopupDialog} from '@/Components';
-import React, {useRef, useState} from 'react';
-import {Animated, StatusBar, Text, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  Animated,
+  Linking,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import * as Icons from 'react-native-heroicons/solid';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {Camera, useCameraDevices} from 'react-native-vision-camera';
 
 const AnimatedStatusBar = Animated.createAnimatedComponent(StatusBar);
 const HomeScreenContainer = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [isShowModalAlert, setIsShowModalAlert] = useState<boolean>(false);
+  const [isShowCamera, setIsShowCamera] = useState<boolean>(false);
+
+  const camera = useRef(null);
+  const devices = useCameraDevices();
+  const device = devices.front;
+
   const inset = useSafeAreaInsets();
 
   const offsetValue = useRef(new Animated.Value(0)).current;
@@ -50,6 +65,34 @@ const HomeScreenContainer = () => {
 
     setShowMenu(!showMenu);
   };
+
+  const checkPermissionsCamera = async () => {
+    const cameraPermission = await Camera.getCameraPermissionStatus();
+    const newCameraPermission = await Camera.requestCameraPermission();
+
+    if (cameraPermission === 'not-determined') {
+      return newCameraPermission;
+    }
+
+    if (newCameraPermission === 'granted') {
+      setIsShowCamera(true);
+    }
+  };
+
+  useEffect(() => {
+    async function getPermission() {
+      const permission = await Camera.requestCameraPermission();
+      if (permission === 'denied') {
+        await Linking.openSettings();
+      }
+    }
+    getPermission();
+  }, []);
+
+  if (device == null) {
+    console.log('devicess', devices);
+    return <Text style={{color: 'white'}}>Camera Not Ready</Text>;
+  }
 
   return (
     <>
@@ -117,8 +160,38 @@ const HomeScreenContainer = () => {
                   Gamal Rivaldi M
                 </Text>
               </View>
+              <View>
+                <TouchableOpacity
+                  onPress={checkPermissionsCamera}
+                  style={{
+                    width: 45,
+                    height: 45,
+                    padding: 5,
+                    borderRadius: 5,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Icons.CameraIcon color={'#000'} />
+                </TouchableOpacity>
+              </View>
             </View>
           </Animated.View>
+          {isShowCamera && (
+            <>
+              <Camera
+                ref={camera}
+                isActive={isShowCamera}
+                device={device}
+                style={StyleSheet.absoluteFill}
+                photo={true}
+              />
+              <View>
+                <TouchableOpacity>
+                  <Text>Button</Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
           <PopupDialog
             isShowModal={isShowModalAlert}
             title="Tetap ingin keluar dari Akunmu?"
